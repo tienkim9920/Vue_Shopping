@@ -36,7 +36,9 @@
 
 <script>
 import ProductAPI from '../API/ProductAPI'
+import CartAPI from '../API/CartAPI'
 import alertify from 'alertifyjs'
+import queryString from 'query-string'
 
 export default {
     name: 'Detail',
@@ -50,6 +52,12 @@ export default {
     },
 
     created () {
+
+        if (!sessionStorage.getItem('idUser')){
+            this.idUser = this.$store.state.idTemp
+        }else{
+            this.idUser = sessionStorage.getItem('idUser')
+        }
 
         const id = this.$route.params.id
 
@@ -66,10 +74,6 @@ export default {
 
     methods: {
         addToCart(){
-            
-            if (!sessionStorage.getItem('idUser')){
-                this.idUser = this.$store.state.idTemp
-            }
 
             let data = {
                 _id: Math.random.toString,
@@ -81,7 +85,32 @@ export default {
                 count: this.count
             }
 
-            this.$store.commit('addToCart', data)
+            if (!sessionStorage.getItem('idUser')){
+                this.$store.commit('addToCart', data)
+            }else{
+                console.log("Ban Da Dang Nhap")
+                
+                const idProduct = this.$route.params.id
+
+                const params = {
+                    idUser: sessionStorage.getItem('idUser'),
+                    count: data.count
+                }
+
+                const query = idProduct + '?' + queryString.stringify(params)
+
+                const addCart = async () => {
+
+                    const response = await CartAPI.addtoCart(query)
+                    
+                    console.log(response)
+
+                }
+
+                addCart()
+
+            }
+            
 
             alertify.set('notifier','position', 'bottom-left');
             alertify.success('Bạn Đã Thêm Hàng Thành Công');
@@ -104,6 +133,10 @@ export default {
 </script>
 
 <style>
+
+.bannerDetail {
+    background-image: url(../Global/Image/banner3.jpg)
+}
 
 .alertify-notifier {
     color: #ffffff;
@@ -128,10 +161,6 @@ export default {
 .input_quality{
     width: 10%;
     height: 2rem;
-}
-
-.bannerDetail {
-    background-image: url(../Global/Image/banner3.jpg)
 }
 
 .carousel-item {

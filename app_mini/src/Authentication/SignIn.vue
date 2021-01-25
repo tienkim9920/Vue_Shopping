@@ -7,6 +7,8 @@
                     <form class="box">
                         <h1>Sign In</h1>
                         <p class="text-muted"> Please enter your login and password!</p>
+                        <span v-if="errorEmail" class="text-danger">{{ errorEmail }}</span>
+                        <span v-if="errorPassword" class="text-danger">{{ errorPassword }}</span>
                         <input type="text" placeholder="Email" v-model="email" >
                         <input type="password" placeholder="Password" v-model="password" >
                         <router-link to="/signup">
@@ -60,15 +62,9 @@ export default {
     },
 
     methods: {
-        // onChangeEmail(e) {
-        //     console.log(e.target.value)
-        // },
-        // onChangePassword(e) {
-        //     console.log(e.target.value)
-        // }
         onSubmit(e){
             e.preventDefault();
-            
+
             console.log("Email: ", this.email)
             console.log("Password: ", this.password)
 
@@ -78,11 +74,20 @@ export default {
 
             if (account){
                 if (account.password === this.password){
+
+                    sessionStorage.setItem('idUser', account._id)
+
+                    this.$store.commit('addSession', sessionStorage.getItem('idUser'))
+
                     this.$router.push('/')
+
                 }else{
-                    this.password = "Please Check Password Your!"
+                    this.errorPassword = "Please Check Password Your!"
+                    this.password = ''
                 }
             }else{
+                this.email = ''
+                this.password = ''
                 this.errorEmail = "Please Check Email Your!"
             }
 

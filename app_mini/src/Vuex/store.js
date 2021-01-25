@@ -2,11 +2,10 @@ import { createStore } from 'vuex'
 
 // Create a new store instance.
 const store = createStore({
-  state () {
-    return {
+  state: {
       idTemp: 'abc123',
+      idUser: '',
       carts: []
-    }
   },
   mutations: {
     addToCart(state, data){
@@ -88,7 +87,35 @@ const store = createStore({
 
       return state
 
+    },
+
+    addSession(state, data) {
+      console.log("IdUser: ", data)
+
+      const cloneCarts = state.carts
+      const cloneIdTemp = state.idTemp
+
+      state.idTemp = cloneIdTemp
+      state.idUser = data
+      state.carts = cloneCarts
+
+      console.log(state)
+    },
+
+    deleteSession(state, data) {
+      console.log('IdUser: ', data)
+
+      const cloneCarts = state.carts
+      const cloneIdTemp = state.idTemp
+
+      state.idTemp = cloneIdTemp
+      state.idUser = data
+      state.carts = cloneCarts
+
+      console.log(state)
     }
+
+    
   },
 
 })

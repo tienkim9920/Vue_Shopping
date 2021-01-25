@@ -11,11 +11,11 @@
     </th>
     <td class="align-middle"><strong>$ {{ parseInt(item.count) * parseInt(item.price)  }}</strong></td>
     <td class="align-middle">
-        <button class="btn btn_quality" @click="() => downCount(item.count, item.idProduct)">-</button>
+        <button class="btn btn_quality" @click="() => downCount(item.count, item.idProduct, item.idUser)">-</button>
         &nbsp;
         <strong> {{ item.count }} </strong>
         &nbsp;
-        <button class="btn btn_quality" @click="() => upCount(item.count, item.idProduct)">+</button>
+        <button class="btn btn_quality" @click="() => upCount(item.count, item.idProduct, item.idUser)">+</button>
     </td>
     <td class="align-middle">
         <a class="text-dark remove_item" @click="() => handlerDelete(item.idUser, item.idProduct)">
@@ -44,13 +44,14 @@ export default {
         },
         
         //Truyền data lên component cha
-        upCount(value, idProduct){
+        upCount(value, idProduct, idUser){
 
             const count = parseInt(value) + 1
 
             const data = {
                 idProduct: idProduct,
-                count: count
+                count: count,
+                idUser: idUser
             }
             
             this.$emit('upCount', data)
@@ -58,7 +59,7 @@ export default {
         },
 
         //Truyền data lên component cha
-        downCount(value, idProduct){
+        downCount(value, idProduct, idUser){
 
             if (parseInt(value) === 1){
                 return
@@ -68,7 +69,8 @@ export default {
 
             const data = {
                 idProduct: idProduct,
-                count: count
+                count: count,
+                idUser: idUser
             }
             
             this.$emit('downCount', data)

@@ -6,6 +6,9 @@
                 <li><router-link exact to="/">Home</router-link></li>
                 <li><router-link to="/shop">Shop</router-link></li>
                 <!-- <li><router-link to="/signin">Sign In</router-link></li> -->
+                <li v-if="idUser">
+                    <router-link to="/history">History</router-link>
+                </li>
                 <li v-if="!idUser">
                     <LoginLink />
                 </li>
@@ -30,16 +33,26 @@ import LogoutLink from '../Authentication/LogoutLink.vue'
 
 export default {
     name: 'Header',
-    
-    data() {
-        return {
-            idUser: sessionStorage.getItem('idUser')
+
+    created () {
+        if (sessionStorage.getItem('idUser')){
+
+            this.$store.commit('addSession', sessionStorage.getItem('idUser'))
+
+        }
+    },
+
+    computed: {
+        idUser() {
+            return this.$store.state.idUser
         }
     },
 
     components: {
         LoginLink, LogoutLink
     }
+
+    
 }
 </script>
 <style>
